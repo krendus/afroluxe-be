@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
+	_ "github.com/joho/godotenv/autoload"
 )
 
 type Env struct {
@@ -20,21 +21,13 @@ func LoadEnv() Env {
 		if err != nil {
 			log.Fatalf("Error Loading .env file:: \n %v", err)
 		}
-		loadedEnv := Env{
-			DB_NAME:     os.Getenv("DB_NAME"),
-			MONGODB_URI: os.Getenv("MONGODB_URI"),
-			PORT:        os.Getenv("PORT"),
-		}
-
-		return loadedEnv
-	} else {
-		loadedEnv := Env{
-			DB_NAME:     os.Getenv("DB_NAME"),
-			MONGODB_URI: os.Getenv("MONGODB_URI"),
-			PORT:        os.Getenv("PORT"),
-		}
-
-		return loadedEnv
 	}
+	loadedEnv := Env{
+		DB_NAME:     os.Getenv("DB_NAME"),
+		MONGODB_URI: os.Getenv("MONGODB_URI"),
+		PORT:        os.Getenv("PORT"),
+	}
+
+	return loadedEnv
 
 }
