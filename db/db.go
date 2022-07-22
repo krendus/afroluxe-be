@@ -6,7 +6,6 @@ import (
 	"log"
 
 	"github.com/afroluxe/afroluxe-be/config"
-	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -26,9 +25,5 @@ func connectDB() *mongo.Database {
 var db *mongo.Database = connectDB()
 
 func CollectionInstance(collectionName string) *mongo.Collection {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatalf("Error Loading .env file:: \n %v", err)
-	}
 	return db.Collection(collectionName)
 }
