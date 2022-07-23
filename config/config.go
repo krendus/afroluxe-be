@@ -9,9 +9,9 @@ import (
 )
 
 type Env struct {
-	DB_NAME     string
-	MONGODB_URI string
-	PORT        string
+	DbName     string
+	MongodbUri string
+	PORT       string
 }
 
 func LoadEnv() Env {
@@ -23,9 +23,9 @@ func LoadEnv() Env {
 		}
 	}
 	loadedEnv := Env{
-		DB_NAME:     os.Getenv("DB_NAME"),
-		MONGODB_URI: os.Getenv("MONGODB_URI"),
-		PORT:        os.Getenv("PORT"),
+		DbName:     os.Getenv("DB_NAME"),
+		MongodbUri: os.Getenv("MONGODB_URI"),
+		PORT:       os.Getenv("PORT"),
 	}
 
 	return loadedEnv
