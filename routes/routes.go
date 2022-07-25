@@ -14,5 +14,6 @@ func SetupRoute() {
 	r := gin.Default()
 	r.GET("/", controllers.WelcomeHandler)
 	CompileAuthRoute(r)
+	CompileStylistRoute(r)
 	r.Run(fmt.Sprintf(":%v", env.PORT))
 }

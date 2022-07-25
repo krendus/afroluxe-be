@@ -11,6 +11,7 @@ import (
 type Env struct {
 	DbName     string
 	MongodbUri string
+	JwtKey     string
 	PORT       string
 }
 
@@ -25,6 +26,7 @@ func LoadEnv() Env {
 	loadedEnv := Env{
 		DbName:     os.Getenv("DB_NAME"),
 		MongodbUri: os.Getenv("MONGODB_URI"),
+		JwtKey:     os.Getenv("JWT_KEY"),
 		PORT:       os.Getenv("PORT"),
 	}
 

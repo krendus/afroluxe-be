@@ -62,9 +62,16 @@ func HandleSignIn(c *gin.Context) {
 	err := UserCollection.FindOne(context.TODO(), bson.D{{Key: "email", Value: user.Email}}).Decode(&result)
 	if err != mongo.ErrNoDocuments {
 		if valid := utils.CheckPasswordHash(result.Password, user.Password); valid {
+			expTime := time.Now().Add(time.Minute * 60)
+			token, err := utils.CreateNewToken(result.Id, expTime)
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "internal server error"})
+				return
+			}
+			c.SetCookie("token", token, 60*60, "/", "*", false, true)
 			c.JSON(http.StatusOK, result.Res())
 		} else {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid login details"})
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid login details"})
 		}
 	} else {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid login details"})
