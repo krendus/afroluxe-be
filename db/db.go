@@ -10,7 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var env config.Env = config.LoadEnv()
+var env = config.LoadEnv()
 
 func connectDB() *mongo.Database {
 
@@ -22,7 +22,7 @@ func connectDB() *mongo.Database {
 	return client.Database(env.DbName)
 }
 
-var db *mongo.Database = connectDB()
+var db = connectDB()
 
 func CollectionInstance(collectionName string) *mongo.Collection {
 	return db.Collection(collectionName)
