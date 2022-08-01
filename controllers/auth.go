@@ -149,6 +149,15 @@ func VerifyEmail(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal sever error"})
 		return
 	}
-
+	err = db.DelRedisValue(user.Email)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal sever error"})
+		return
+	}
+	err = db.DelRedisValue(fmt.Sprintf("%v-otp", user.Email))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal sever error"})
+		return
+	}
 	c.JSON(http.StatusCreated, gin.H{"message": "Registration succesful"})
 }
