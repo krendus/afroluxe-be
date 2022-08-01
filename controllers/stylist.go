@@ -16,5 +16,5 @@ func GetStylist(c *gin.Context) {
 		c.JSON(http.StatusOK, fmt.Sprintf("%v, %v", id, stylistId))
 		return
 	}
-	c.JSON(http.StatusBadRequest, "error")
+	c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
 }

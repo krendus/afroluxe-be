@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"math/rand"
 	"time"
 
 	"github.com/afroluxe/afroluxe-be/config"
@@ -51,4 +52,14 @@ func VerifyToken(tokenStr string) (bool, string) {
 		return false, ""
 	}
 	return true, claims.Id
+}
+
+func GenerateRandomOtp(size uint8) string {
+	newRand := rand.New(rand.NewSource(time.Now().Unix()))
+	table := [10]byte{'1', '2', '3', '4', '5', '6', '7', '8', '9', '0'}
+	b := make([]byte, size)
+	for i := uint8(0); i < size; i++ {
+		b[i] = table[newRand.Intn(len(table))]
+	}
+	return string(b)
 }
