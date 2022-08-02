@@ -17,8 +17,9 @@ func connectRedis() *redis.Client {
 	return rdb
 }
 
+var r = connectRedis()
+
 func SetRedisValue(key string, value interface{}) error {
-	r := connectRedis()
 	ctx := context.Background()
 	p, err := json.Marshal(value)
 	if err != nil {
@@ -30,7 +31,6 @@ func SetRedisValue(key string, value interface{}) error {
 }
 
 func GetRedisValue(key string, dest interface{}) error {
-	r := connectRedis()
 	ctx := context.Background()
 	val, err := r.Get(ctx, key).Result()
 	if err != nil {
@@ -40,7 +40,6 @@ func GetRedisValue(key string, dest interface{}) error {
 }
 
 func DelRedisValue(key string) error {
-	r := connectRedis()
 	ctx := context.Background()
 	return r.Del(ctx, key).Err()
 }
