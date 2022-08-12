@@ -1,7 +1,9 @@
 package utils
 
 import (
+	"log"
 	"math/rand"
+	"os"
 	"time"
 
 	"github.com/afroluxe/afroluxe-be/config"
@@ -62,4 +64,19 @@ func GenerateRandomOtp(size uint8) string {
 		b[i] = table[newRand.Intn(len(table))]
 	}
 	return string(b)
+}
+
+func InfoLogger(message interface{}) {
+	logger := log.New(os.Stdout, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
+	logger.Println(message)
+}
+
+func WarningLogger(message interface{}) {
+	logger := log.New(os.Stdout, "WARNING: ", log.Ldate|log.Ltime|log.Lshortfile)
+	logger.Println(message)
+}
+
+func ErrorLogger(message interface{}) {
+	logger := log.New(os.Stderr, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
+	logger.Println(message)
 }

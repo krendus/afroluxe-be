@@ -15,7 +15,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-var UserCollection *mongo.Collection = db.CollectionInstance("users")
+var userCollection = db.CollectionInstance("users")
 
 type LoginCredentials struct {
 	Email    string `binding:"required"`
@@ -36,23 +36,29 @@ type VerifyRequest struct {
 func HandleSignUp(c *gin.Context) {
 	var user models.User
 	if err := c.ShouldBindJSON(&user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "required fields are missing"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "required fields are missing"})
 		return
 	}
 	if user.Role != "stylist" && user.Role != "customer" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid user role"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "invalid user role"})
 		return
 	}
-	var result bson.M
-	err := UserCollection.FindOne(context.TODO(), bson.D{{Key: "email", Value: user.Email}}).Decode(&result)
+
+	err := userCollection.FindOne(context.TODO(), bson.D{{Key: "email", Value: user.Email}}).Err()
+	if err != nil && err != mongo.ErrNoDocuments {
+		utils.ErrorLogger(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal sever error"})
+		return
+	}
 	if err == mongo.ErrNoDocuments {
 		user.Password, _ = utils.HashPassword(user.Password)
-		user.Joined = time.Now()
+		user.Joined = time.Now().Unix()
 
 		// save the user struct on redis
 		err = db.SetRedisValue(user.Email, user)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal sever error"})
+			utils.ErrorLogger(err)
+			c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal sever error"})
 			return
 		}
 
@@ -62,7 +68,8 @@ func HandleSignUp(c *gin.Context) {
 		// saves the otp to redis
 		err = db.SetRedisValue(fmt.Sprintf("%v-otp", user.Email), otp)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal sever error"})
+			utils.ErrorLogger(err)
+			c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal sever error"})
 			return
 		}
 
@@ -75,11 +82,13 @@ func HandleSignUp(c *gin.Context) {
 			Filename: "./template/verify.html",
 		})
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal sever error"})
+			utils.ErrorLogger(err)
+			c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal sever error"})
+			return
 		}
 		c.JSON(http.StatusOK, RegResponse{"OTP is sent to email for verification", user.Email})
 	} else {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "email already taken"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "email already taken"})
 	}
 }
 
@@ -87,28 +96,29 @@ func HandleSignUp(c *gin.Context) {
 func HandleSignIn(c *gin.Context) {
 	var user LoginCredentials
 	if err := c.ShouldBindJSON(&user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "required fields are missing"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "required fields are missing"})
 		return
 	}
 	var result models.User
 
 	// validates login
-	err := UserCollection.FindOne(context.TODO(), bson.D{{Key: "email", Value: user.Email}}).Decode(&result)
-	if err != mongo.ErrNoDocuments {
+	err := userCollection.FindOne(context.TODO(), bson.D{{Key: "email", Value: user.Email}}).Decode(&result)
+	if err == nil {
 		if valid := utils.CheckPasswordHash(result.Password, user.Password); valid {
 			expTime := time.Now().Add(time.Minute * 60 * 3)
 			token, err := utils.CreateNewToken(result.Id, expTime)
 			if err != nil {
-				c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+				utils.ErrorLogger(err)
+				c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal server error"})
 				return
 			}
 			c.SetCookie("token", token, 60*60*3, "/", "*", false, true)
 			c.JSON(http.StatusOK, result.Res())
 		} else {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid login details"})
+			c.JSON(http.StatusUnauthorized, gin.H{"message": "invalid login details"})
 		}
 	} else {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid login details"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "invalid login details"})
 	}
 
 }
@@ -117,7 +127,7 @@ func VerifyEmail(c *gin.Context) {
 	var body VerifyRequest
 
 	if err := c.ShouldBindJSON(&body); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "required fields are missing"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "required fields are missing"})
 		return
 	}
 	var redisOtp string
@@ -125,38 +135,43 @@ func VerifyEmail(c *gin.Context) {
 	// fetch the otp from redis
 	err := db.GetRedisValue(fmt.Sprintf("%v-otp", body.Email), &redisOtp)
 	if err == redis.Nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Registration session expired"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Registration session expired"})
 		return
 	}
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal sever error"})
+		utils.ErrorLogger(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal sever error"})
 		return
 	}
 
 	// comapares the sent otp and the redis
 	if redisOtp != body.Otp {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid OTP"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Invalid OTP"})
 		return
 	}
 	var user models.User
 	err = db.GetRedisValue(body.Email, &user)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal sever error"})
+		utils.ErrorLogger(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal sever error"})
 		return
 	}
-	_, err = UserCollection.InsertOne(context.TODO(), user)
+	_, err = userCollection.InsertOne(context.TODO(), user)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal sever error"})
+		utils.ErrorLogger(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal sever error"})
 		return
 	}
 	err = db.DelRedisValue(user.Email)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal sever error"})
+		utils.ErrorLogger(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal sever error"})
 		return
 	}
 	err = db.DelRedisValue(fmt.Sprintf("%v-otp", user.Email))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal sever error"})
+		utils.ErrorLogger(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal sever error"})
 		return
 	}
 	c.JSON(http.StatusCreated, gin.H{"message": "Registration succesful"})

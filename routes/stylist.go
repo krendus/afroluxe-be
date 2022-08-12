@@ -7,5 +7,6 @@ import (
 
 func CompileStylistRoute(r *gin.Engine) {
 	auth := r.Group("/stylist")
+	auth.POST("/", controllers.CreateStylist)
 	auth.GET("/:id", controllers.GetStylist)
 }

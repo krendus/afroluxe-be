@@ -24,8 +24,8 @@ type Service struct {
 }
 
 type Location struct {
-	Longitude string `json:"longitude" bson:"longitude"`
-	Latitude  string `json:"latitude" bson:"latitude"`
+	Longitude float64 `json:"longitude" bson:"longitude"`
+	Latitude  float64 `json:"latitude" bson:"latitude"`
 }
 
 type BusinessHour struct {
@@ -40,11 +40,16 @@ type BusinessHour struct {
 
 type Stylist struct {
 	Id           string `json:"_id" bson:"_id,omitempty"`
-	Name         string `json:"name" bson:"name"`
-	Bio          string `json:"bio" bson:"bio"`
-	UserId       string `json:"user_id" bson:"user_id"`
-	Location     `json:"location" bson:"location"`
-	BusinessHour `json:"business_hour" bson:"business_hour"`
-	CreatedAt    time.Time `json:"created_at" bson:"created_at"`
-	UpdatedAt    time.Time `json:"updated_at" bson:"updated_at"`
+	Name         string `json:"name" bson:"name"  binding:"required"`
+	Bio          string `json:"bio" bson:"bio"  binding:"required"`
+	UserId       string `json:"user_id" bson:"user_id"  binding:"required"`
+	Location     `json:"location" bson:"location"  binding:"required"`
+	BusinessHour `json:"business_hour" bson:"business_hour"  binding:"required"`
+	Services     []string `json:"services" bson:"services"  binding:"required"`
+	Category     []string `json:"category" bson:"category"  binding:"required"`
+	Type         string   `json:"type" bson:"type"  binding:"required"`
+	HomeService  bool     `json:"home_service" bson:"home_service"  binding:"required"`
+	Size         uint     `json:"size" bson:"size"  binding:"required"`
+	CreatedAt    int64    `json:"created_at" bson:"created_at"`
+	UpdatedAt    int64    `json:"updated_at" bson:"updated_at"`
 }

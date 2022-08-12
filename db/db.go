@@ -2,10 +2,10 @@ package db
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/afroluxe/afroluxe-be/config"
+	"github.com/afroluxe/afroluxe-be/utils"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -16,9 +16,9 @@ func connectDB() *mongo.Database {
 
 	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(env.MongodbUri))
 	if err != nil {
-		log.Fatalf("Error connecting to DB:: \n %v", err)
+		log.Fatalf("Error connecting to DB: \n %v", err)
 	}
-	fmt.Printf("DB Connected Successful DB:: \n  %v", env.DbName)
+	utils.InfoLogger("DB Connected Successfully")
 	return client.Database(env.DbName)
 }
 
