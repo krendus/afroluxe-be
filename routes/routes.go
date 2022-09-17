@@ -15,5 +15,7 @@ func SetupRoute() {
 	r.GET("/", controllers.WelcomeHandler)
 	CompileAuthRoute(r)
 	CompileStylistRoute(r)
+	r.POST("/subscribe", controllers.Subscribe)
+	r.GET("/search", controllers.Search)
 	r.Run(fmt.Sprintf(":%v", env.PORT))
 }

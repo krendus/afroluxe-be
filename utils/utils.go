@@ -4,6 +4,7 @@ import (
 	"log"
 	"math/rand"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/afroluxe/afroluxe-be/config"
@@ -25,11 +26,16 @@ func CheckPasswordHash(hash string, password string) bool {
 	return err == nil
 }
 
-func CreateNewToken(id string, expTime time.Time) (string, error) {
+func CreateNewToken(id string) (string, error) {
+	duration, err := strconv.Atoi(loadedEnv.JwtDuration)
+	if err != nil {
+		logger := log.New(os.Stderr, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
+		logger.Println("Invalid JWT Duration")
+	}
 	claims := &Claims{
 		Id: id,
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: expTime.Unix(),
+			ExpiresAt: time.Now().Add(time.Second * time.Duration(duration)).Unix(),
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -41,19 +47,19 @@ func CreateNewToken(id string, expTime time.Time) (string, error) {
 	return signedStr, nil
 }
 
-func VerifyToken(tokenStr string) (bool, string) {
+func VerifyToken(tokenStr string) (bool, *Claims) {
 	claims := &Claims{}
 	token, err := jwt.ParseWithClaims(tokenStr, claims, func(t *jwt.Token) (interface{}, error) {
 		return []byte(config.LoadEnv().JwtKey), nil
 	})
-
 	if err != nil {
-		return false, ""
+		return false, claims
 	}
 	if !token.Valid {
-		return false, ""
+		return false, claims
 	}
-	return true, claims.Id
+
+	return true, claims
 }
 
 func GenerateRandomOtp(size uint8) string {
