@@ -12,7 +12,7 @@ package main
 // @license.name  Apache 2.0
 // @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @host      afroluxe.heroku.app
+// @host      afroluxe.herokuapp.com
 // @BasePath  /
 // @schemes  https
 

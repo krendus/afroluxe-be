@@ -195,7 +195,7 @@ definitions:
     - email
     - otp
     type: object
-host: afroluxe.heroku.app
+host: afroluxe.herokuapp.com
 info:
   contact:
     email: support@swagger.io
