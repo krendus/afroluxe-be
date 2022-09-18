@@ -16,6 +16,15 @@ import (
 
 var subscriptionCollection = db.CollectionInstance("subscription")
 
+// Subcribe ... Adds email to subscription list
+// @Summary Adds email to subscription list
+// @Description Adds email to subscription list
+// @Tags Subscribe
+// @Accept json
+// @Param subscribe body models.VerifyRequest true "Email"
+// @Success 200 {object} dtos.Response
+// @Failure 400,500 {object} dtos.Response
+// @Router /subscribe [post]
 func Subscribe(c *gin.Context) {
 	var subscription models.Subscribe
 

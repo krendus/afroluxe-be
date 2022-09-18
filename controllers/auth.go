@@ -24,7 +24,15 @@ var (
 	loadedEnv      = config.LoadEnv()
 )
 
-// HandleSignUp signup handler
+// HandleSignUp ... Create User
+// @Summary Create new user based on paramters
+// @Description Create new user
+// @Tags Users
+// @Accept json
+// @Param user body models.User true "User Data"
+// @Success 200 {object} dtos.Response
+// @Failure 400,500 {object} dtos.Response
+// @Router /auth/signup [post]
 func HandleSignUp(c *gin.Context) {
 	var user models.User
 	if err := c.ShouldBindJSON(&user); err != nil {
@@ -116,7 +124,15 @@ func HandleSignUp(c *gin.Context) {
 	}
 }
 
-// HandleSignIn signin handler.
+// HandleSignIn ... SignIn User
+// @Summary Sign in user based on paramters
+// @Description Create new user
+// @Tags Users
+// @Accept json
+// @Param user body models.LoginCredentials true "User Data"
+// @Success 200 {object} dtos.Response
+// @Failure 400,500 {object} dtos.Response
+// @Router /auth/signin [post]
 func HandleSignIn(c *gin.Context) {
 	var user models.LoginCredentials
 	if err := c.ShouldBindJSON(&user); err != nil {
@@ -171,6 +187,15 @@ func HandleSignIn(c *gin.Context) {
 
 }
 
+// VerifyEmail ... Verifies user email
+// @Summary Verifies user based on paramters
+// @Description Verifies user email
+// @Tags Users
+// @Accept json
+// @Param user body models.VerifyRequest true "OTP"
+// @Success 200 {object} dtos.Response
+// @Failure 400,500 {object} dtos.Response
+// @Router /auth/verify [post]
 func VerifyEmail(c *gin.Context) {
 	var body models.VerifyRequest
 

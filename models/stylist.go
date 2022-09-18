@@ -37,18 +37,18 @@ type Service struct {
 }
 
 type Stylist struct {
-	Id           string `json:"_id" bson:"_id,omitempty"`
-	BusinessName string `json:"business_name" bson:"business_name"  binding:"required"`
-	Bio          string `json:"bio" bson:"bio"  binding:"required"`
-	UserId       string `json:"user_id" bson:"user_id"  binding:"required"`
-	Location     `json:"location" bson:"location"  binding:"required"`
-	BusinessHour `json:"business_hour" bson:"business_hour"  binding:"required"`
-	Services     []Service `json:"services" bson:"-"  binding:"required"`
-	Category     []string  `json:"category" bson:"category"  binding:"required"`
-	Images       []Image   `json:"images" bson:"-"`
-	BusinessType string    `json:"business_type" bson:"business_type"  binding:"required"`
-	HomeService  bool      `json:"home_service" bson:"home_service"  binding:"required"`
-	Size         uint      `json:"size" bson:"size"  binding:"required"`
-	CreatedAt    int64     `json:"created_at" bson:"created_at"`
-	UpdatedAt    int64     `json:"updated_at" bson:"updated_at"`
+	Id           string       `json:"_id" bson:"_id,omitempty"`
+	BusinessName string       `json:"business_name" bson:"business_name"  binding:"required"`
+	Bio          string       `json:"bio" bson:"bio"  binding:"required"`
+	UserId       string       `json:"user_id" bson:"user_id"  binding:"required"`
+	Location     Location     `json:"location" bson:"location"  binding:"required"`
+	BusinessHour BusinessHour `json:"business_hour" bson:"business_hour"  binding:"required"`
+	Services     []Service    `json:"services" bson:"-"  binding:"required"`
+	Category     []string     `json:"category" bson:"category"  binding:"required"`
+	Images       []Image      `json:"images" bson:"-"`
+	BusinessType string       `json:"business_type" bson:"business_type"  binding:"required"`
+	HomeService  bool         `json:"home_service" bson:"home_service"  binding:"required"`
+	Size         uint         `json:"size" bson:"size"  binding:"required"`
+	CreatedAt    int64        `json:"created_at" bson:"created_at"`
+	UpdatedAt    int64        `json:"updated_at" bson:"updated_at"`
 }

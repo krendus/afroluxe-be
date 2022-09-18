@@ -1,0 +1,439 @@
+basePath: /
+definitions:
+  dtos.Response:
+    properties:
+      data:
+        type: object
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+  models.BusinessHour:
+    properties:
+      friday:
+        type: string
+      monday:
+        type: string
+      saturday:
+        type: string
+      sunday:
+        type: string
+      thursday:
+        type: string
+      tuesday:
+        type: string
+      wednesday:
+        type: string
+    required:
+    - friday
+    - monday
+    - saturday
+    - sunday
+    - thursday
+    - tuesday
+    - wednesday
+    type: object
+  models.Image:
+    properties:
+      _id:
+        type: string
+      created_at:
+        type: integer
+      type:
+        type: string
+      url:
+        type: string
+    type: object
+  models.Location:
+    properties:
+      latitude:
+        type: number
+      longitude:
+        type: number
+    required:
+    - latitude
+    - longitude
+    type: object
+  models.LoginCredentials:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  models.Review:
+    properties:
+      _id:
+        type: string
+      body:
+        type: string
+      created_at:
+        type: integer
+      pricing_rating:
+        type: integer
+      recommendation_rating:
+        type: integer
+      service_rating:
+        type: integer
+      stylist_id:
+        type: string
+      user_id:
+        type: string
+    required:
+    - body
+    - pricing_rating
+    - recommendation_rating
+    - service_rating
+    - stylist_id
+    - user_id
+    type: object
+  models.Service:
+    properties:
+      _id:
+        type: string
+      currency_name:
+        type: string
+      currency_symbol:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      stylist_id:
+        type: string
+    required:
+    - currency_name
+    - currency_symbol
+    - name
+    - price
+    type: object
+  models.Stylist:
+    properties:
+      _id:
+        type: string
+      bio:
+        type: string
+      business_hour:
+        $ref: '#/definitions/models.BusinessHour'
+      business_name:
+        type: string
+      business_type:
+        type: string
+      category:
+        items:
+          type: string
+        type: array
+      created_at:
+        type: integer
+      home_service:
+        type: boolean
+      images:
+        items:
+          $ref: '#/definitions/models.Image'
+        type: array
+      location:
+        $ref: '#/definitions/models.Location'
+      services:
+        items:
+          $ref: '#/definitions/models.Service'
+        type: array
+      size:
+        type: integer
+      updated_at:
+        type: integer
+      user_id:
+        type: string
+    required:
+    - bio
+    - business_hour
+    - business_name
+    - business_type
+    - category
+    - home_service
+    - location
+    - services
+    - size
+    - user_id
+    type: object
+  models.User:
+    properties:
+      _id:
+        type: string
+      email:
+        type: string
+      first_name:
+        type: string
+      joined:
+        type: integer
+      last_name:
+        type: string
+      mobile_number:
+        type: string
+      password:
+        type: string
+      role:
+        type: string
+    required:
+    - email
+    - first_name
+    - last_name
+    - mobile_number
+    - password
+    - role
+    type: object
+  models.VerifyRequest:
+    properties:
+      email:
+        type: string
+      otp:
+        type: string
+    required:
+    - email
+    - otp
+    type: object
+host: afroluxe.heroku.app
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is the API documentation of afroluxe.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Afroluxe API
+  version: "1.0"
+paths:
+  /auth/signin:
+    post:
+      consumes:
+      - application/json
+      description: Create new user
+      parameters:
+      - description: User Data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoginCredentials'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dtos.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dtos.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dtos.Response'
+      summary: Sign in user based on paramters
+      tags:
+      - Users
+  /auth/signup:
+    post:
+      consumes:
+      - application/json
+      description: Create new user
+      parameters:
+      - description: User Data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dtos.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dtos.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dtos.Response'
+      summary: Create new user based on paramters
+      tags:
+      - Users
+  /auth/verify:
+    post:
+      consumes:
+      - application/json
+      description: Verifies user email
+      parameters:
+      - description: OTP
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.VerifyRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dtos.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dtos.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dtos.Response'
+      summary: Verifies user based on paramters
+      tags:
+      - Users
+  /stylist:
+    post:
+      consumes:
+      - application/json
+      description: Creates new stylist
+      parameters:
+      - description: Stylist
+        in: body
+        name: stylist
+        required: true
+        schema:
+          $ref: '#/definitions/models.Stylist'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dtos.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dtos.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dtos.Response'
+      summary: Creates new stylist
+      tags:
+      - Stylist
+  /stylist/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Verifies user email
+      parameters:
+      - description: Stylist ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dtos.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dtos.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dtos.Response'
+      summary: Gets stylist based on stylist id
+      tags:
+      - Stylist
+  /stylist/images:
+    post:
+      consumes:
+      - application/json
+      description: Reviews stylist
+      parameters:
+      - description: Stylist Images
+        in: formData
+        name: images
+        required: true
+        type: file
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dtos.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dtos.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dtos.Response'
+      summary: Reviews stylist
+      tags:
+      - Stylist
+  /stylist/review:
+    post:
+      consumes:
+      - application/json
+      description: Reviews stylist
+      parameters:
+      - description: Stylist
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.Review'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dtos.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dtos.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dtos.Response'
+      summary: Reviews stylist
+      tags:
+      - Stylist
+  /subscribe:
+    post:
+      consumes:
+      - application/json
+      description: Adds email to subscription list
+      parameters:
+      - description: Email
+        in: body
+        name: subscribe
+        required: true
+        schema:
+          $ref: '#/definitions/models.VerifyRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dtos.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dtos.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dtos.Response'
+      summary: Adds email to subscription list
+      tags:
+      - Subscribe
+schemes:
+- https
+securityDefinitions:
+  BasicAuth:
+    type: basic
+swagger: "2.0"

@@ -24,6 +24,15 @@ var (
 	imagesCollection   = db.CollectionInstance("images")
 )
 
+// GetStylist ... Gets stylist
+// @Summary Gets stylist based on stylist id
+// @Description Verifies user email
+// @Tags Stylist
+// @Accept json
+// @Param        id   path      string  true  "Stylist ID"
+// @Success 200 {object} dtos.Response
+// @Failure 400,500 {object} dtos.Response
+// @Router /stylist/{id} [get]
 func GetStylist(c *gin.Context) {
 	stylistId := c.Param("id")
 	var result models.Stylist
@@ -92,6 +101,15 @@ func GetStylist(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": result})
 }
 
+// CreateStylist ... Creates new stylist
+// @Summary Creates new stylist
+// @Description Creates new stylist
+// @Tags Stylist
+// @Accept json
+// @Param stylist body models.Stylist true "Stylist"
+// @Success 200 {object} dtos.Response
+// @Failure 400,500 {object} dtos.Response
+// @Router /stylist [post]
 func CreateStylist(c *gin.Context) {
 	var stylist models.Stylist
 	token, _ := c.Cookie("token")
@@ -203,6 +221,15 @@ func CreateStylist(c *gin.Context) {
 	})
 }
 
+// ReviewStylist ... Reviews stylist
+// @Summary  Reviews stylist
+// @Description  Reviews stylist
+// @Tags Stylist
+// @Accept json
+// @Param user body models.Review true "Stylist"
+// @Success 200 {object} dtos.Response
+// @Failure 400,500 {object} dtos.Response
+// @Router /stylist/review [post]
 func ReviewStylist(c *gin.Context) {
 	var review models.Review
 	token, _ := c.Cookie("token")
@@ -295,6 +322,15 @@ func ReviewStylist(c *gin.Context) {
 	})
 }
 
+// ReviewStylist ... Reviews stylist
+// @Summary  Reviews stylist
+// @Description  Reviews stylist
+// @Tags Stylist
+// @Accept json
+// @Param images formData file true "Stylist Images"
+// @Success 200 {object} dtos.Response
+// @Failure 400,500 {object} dtos.Response
+// @Router /stylist/images [post]
 func StylistImageUpload(c *gin.Context) {
 	token, _ := c.Cookie("token")
 	verified, claims := utils.VerifyToken(token)
