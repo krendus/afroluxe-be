@@ -138,7 +138,7 @@ func HandleSignIn(c *gin.Context) {
 	if err := c.ShouldBindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, dtos.Response{
 			StatusCode: http.StatusBadRequest,
-			Message:    "Required fields are missing",
+			Message:    "required fields are missing",
 			Data:       nil,
 		})
 		return
@@ -154,7 +154,7 @@ func HandleSignIn(c *gin.Context) {
 				utils.ErrorLogger(err)
 				c.JSON(http.StatusInternalServerError, dtos.Response{
 					StatusCode: http.StatusInternalServerError,
-					Message:    "Internal server error",
+					Message:    "internal server error",
 					Data:       nil,
 				})
 				return
@@ -172,7 +172,7 @@ func HandleSignIn(c *gin.Context) {
 		} else {
 			c.JSON(http.StatusUnauthorized, dtos.Response{
 				StatusCode: http.StatusUnauthorized,
-				Message:    "Invalid login details",
+				Message:    "invalid login details",
 				Data:       nil,
 			})
 			return
@@ -180,7 +180,7 @@ func HandleSignIn(c *gin.Context) {
 	} else {
 		c.JSON(http.StatusUnauthorized, dtos.Response{
 			StatusCode: http.StatusUnauthorized,
-			Message:    "Invalid login details",
+			Message:    "invalid login details",
 			Data:       nil,
 		})
 	}
@@ -202,7 +202,7 @@ func VerifyEmail(c *gin.Context) {
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, dtos.Response{
 			StatusCode: http.StatusBadRequest,
-			Message:    "Required fields are missing",
+			Message:    "required fields are missing",
 			Data:       nil,
 		})
 		return
@@ -214,7 +214,7 @@ func VerifyEmail(c *gin.Context) {
 	if err == redis.Nil {
 		c.JSON(http.StatusBadRequest, dtos.Response{
 			StatusCode: http.StatusBadRequest,
-			Message:    "Registration session expired",
+			Message:    "registration session expired",
 			Data:       nil,
 		})
 		return
@@ -223,7 +223,7 @@ func VerifyEmail(c *gin.Context) {
 		utils.ErrorLogger(err)
 		c.JSON(http.StatusInternalServerError, dtos.Response{
 			StatusCode: http.StatusInternalServerError,
-			Message:    "Internal server error",
+			Message:    "internal server error",
 			Data:       nil,
 		})
 		return
@@ -233,7 +233,7 @@ func VerifyEmail(c *gin.Context) {
 	if redisOtp != body.Otp {
 		c.JSON(http.StatusUnauthorized, dtos.Response{
 			StatusCode: http.StatusUnauthorized,
-			Message:    "Invalid OTP",
+			Message:    "invalid otp",
 			Data:       nil,
 		})
 		return
@@ -244,7 +244,7 @@ func VerifyEmail(c *gin.Context) {
 		utils.ErrorLogger(err)
 		c.JSON(http.StatusInternalServerError, dtos.Response{
 			StatusCode: http.StatusInternalServerError,
-			Message:    "Internal server error",
+			Message:    "internal server error",
 			Data:       nil,
 		})
 		return
@@ -254,7 +254,7 @@ func VerifyEmail(c *gin.Context) {
 		utils.ErrorLogger(err)
 		c.JSON(http.StatusInternalServerError, dtos.Response{
 			StatusCode: http.StatusInternalServerError,
-			Message:    "Internal server error",
+			Message:    "internal server error",
 			Data:       nil,
 		})
 		return
@@ -264,7 +264,7 @@ func VerifyEmail(c *gin.Context) {
 		utils.ErrorLogger(err)
 		c.JSON(http.StatusInternalServerError, dtos.Response{
 			StatusCode: http.StatusInternalServerError,
-			Message:    "Internal server error",
+			Message:    "internal server error",
 			Data:       nil,
 		})
 		return
@@ -274,14 +274,14 @@ func VerifyEmail(c *gin.Context) {
 		utils.ErrorLogger(err)
 		c.JSON(http.StatusInternalServerError, dtos.Response{
 			StatusCode: http.StatusInternalServerError,
-			Message:    "Internal server error",
+			Message:    "internal server error",
 			Data:       nil,
 		})
 		return
 	}
 	c.JSON(http.StatusCreated, dtos.Response{
 		StatusCode: http.StatusCreated,
-		Message:    "Registration succesful",
+		Message:    "registration succesful",
 		Data:       gin.H{"user_id": userRes.InsertedID},
 	})
 }

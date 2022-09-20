@@ -31,7 +31,7 @@ func Subscribe(c *gin.Context) {
 	if err := c.ShouldBindJSON(&subscription); err != nil {
 		c.JSON(http.StatusBadRequest, dtos.Response{
 			StatusCode: http.StatusBadRequest,
-			Message:    "Required fields are missing",
+			Message:    "required fields are missing",
 			Data:       nil,
 		})
 		return
@@ -46,21 +46,21 @@ func Subscribe(c *gin.Context) {
 			utils.ErrorLogger(err)
 			c.JSON(http.StatusInternalServerError, dtos.Response{
 				StatusCode: http.StatusInternalServerError,
-				Message:    "Internal server error",
+				Message:    "internal server error",
 				Data:       nil,
 			})
 			return
 		}
 		c.JSON(http.StatusCreated, dtos.Response{
 			StatusCode: http.StatusCreated,
-			Message:    "Email added to subscripion list",
+			Message:    "email added to subscripion list",
 			Data:       nil,
 		})
 		return
 	}
 	c.JSON(http.StatusBadRequest, dtos.Response{
 		StatusCode: http.StatusBadRequest,
-		Message:    "Email already added",
+		Message:    "email already added",
 		Data:       nil,
 	})
 }

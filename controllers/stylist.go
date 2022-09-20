@@ -42,7 +42,7 @@ func GetStylist(c *gin.Context) {
 		utils.ErrorLogger(err)
 		c.JSON(http.StatusInternalServerError, dtos.Response{
 			StatusCode: http.StatusInternalServerError,
-			Message:    "Internal server error",
+			Message:    "internal server error",
 			Data:       nil,
 		})
 		return
@@ -63,7 +63,7 @@ func GetStylist(c *gin.Context) {
 		utils.ErrorLogger(err)
 		c.JSON(http.StatusInternalServerError, dtos.Response{
 			StatusCode: http.StatusInternalServerError,
-			Message:    "Internal server error",
+			Message:    "internal server error",
 			Data:       nil,
 		})
 		return
@@ -73,7 +73,7 @@ func GetStylist(c *gin.Context) {
 		utils.ErrorLogger(err)
 		c.JSON(http.StatusInternalServerError, dtos.Response{
 			StatusCode: http.StatusInternalServerError,
-			Message:    "Internal server error",
+			Message:    "internal server error",
 			Data:       nil,
 		})
 		return
@@ -83,7 +83,7 @@ func GetStylist(c *gin.Context) {
 		utils.ErrorLogger(err)
 		c.JSON(http.StatusInternalServerError, dtos.Response{
 			StatusCode: http.StatusInternalServerError,
-			Message:    "Internal server error",
+			Message:    "internal server error",
 			Data:       nil,
 		})
 		return
@@ -93,7 +93,7 @@ func GetStylist(c *gin.Context) {
 		utils.ErrorLogger(err)
 		c.JSON(http.StatusInternalServerError, dtos.Response{
 			StatusCode: http.StatusInternalServerError,
-			Message:    "Internal server error",
+			Message:    "internal server error",
 			Data:       nil,
 		})
 		return
@@ -126,7 +126,7 @@ func CreateStylist(c *gin.Context) {
 	if err := c.ShouldBindJSON(&stylist); err != nil {
 		c.JSON(http.StatusBadRequest, dtos.Response{
 			StatusCode: http.StatusBadRequest,
-			Message:    "Required fields are missing",
+			Message:    "required fields are missing",
 			Data:       nil,
 		})
 		return
@@ -134,7 +134,7 @@ func CreateStylist(c *gin.Context) {
 	if claims.Id != stylist.UserId {
 		c.JSON(http.StatusUnauthorized, dtos.Response{
 			StatusCode: http.StatusUnauthorized,
-			Message:    "Unauthorized",
+			Message:    "unauthorized",
 			Data:       nil,
 		})
 		return
@@ -149,7 +149,7 @@ func CreateStylist(c *gin.Context) {
 	if err == mongo.ErrNoDocuments {
 		c.JSON(http.StatusBadRequest, dtos.Response{
 			StatusCode: http.StatusBadRequest,
-			Message:    "User is not a stylist",
+			Message:    "user is not a stylist",
 			Data:       nil,
 		})
 		return
@@ -158,7 +158,7 @@ func CreateStylist(c *gin.Context) {
 		utils.ErrorLogger(err)
 		c.JSON(http.StatusInternalServerError, dtos.Response{
 			StatusCode: http.StatusInternalServerError,
-			Message:    "Internal server error",
+			Message:    "internal server error",
 			Data:       nil,
 		})
 		return
@@ -173,7 +173,7 @@ func CreateStylist(c *gin.Context) {
 			utils.ErrorLogger(err)
 			c.JSON(http.StatusInternalServerError, dtos.Response{
 				StatusCode: http.StatusInternalServerError,
-				Message:    "Internal server error",
+				Message:    "internal server error",
 				Data:       nil,
 			})
 		}
@@ -193,14 +193,14 @@ func CreateStylist(c *gin.Context) {
 			utils.ErrorLogger(err)
 			c.JSON(http.StatusInternalServerError, dtos.Response{
 				StatusCode: http.StatusInternalServerError,
-				Message:    "Internal server error",
+				Message:    "internal server error",
 				Data:       nil,
 			})
 			return
 		}
 		c.JSON(http.StatusCreated, dtos.Response{
 			StatusCode: http.StatusCreated,
-			Message:    "Stylist created successfully",
+			Message:    "stylist created successfully",
 			Data:       gin.H{"stylist_id": res.InsertedID},
 		})
 		return
@@ -209,14 +209,14 @@ func CreateStylist(c *gin.Context) {
 		utils.ErrorLogger(err)
 		c.JSON(http.StatusInternalServerError, dtos.Response{
 			StatusCode: http.StatusInternalServerError,
-			Message:    "Internal server error",
+			Message:    "internal server error",
 			Data:       nil,
 		})
 		return
 	}
 	c.JSON(http.StatusBadRequest, dtos.Response{
 		StatusCode: http.StatusBadRequest,
-		Message:    "Stylist already exists",
+		Message:    "stylist already exists",
 		Data:       nil,
 	})
 }
@@ -245,7 +245,7 @@ func ReviewStylist(c *gin.Context) {
 	if err := c.ShouldBindJSON(&review); err != nil {
 		c.JSON(http.StatusBadRequest, dtos.Response{
 			StatusCode: http.StatusBadRequest,
-			Message:    "Required fields are missing",
+			Message:    "required fields are missing",
 			Data:       nil,
 		})
 		return
@@ -253,7 +253,7 @@ func ReviewStylist(c *gin.Context) {
 	if claims.Id != review.UserId {
 		c.JSON(http.StatusUnauthorized, dtos.Response{
 			StatusCode: http.StatusUnauthorized,
-			Message:    "Unauthorized",
+			Message:    "unauthorized",
 			Data:       nil,
 		})
 		return
@@ -263,7 +263,7 @@ func ReviewStylist(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, dtos.Response{
 			StatusCode: http.StatusInternalServerError,
-			Message:    "Internal server error",
+			Message:    "internal server error",
 			Data:       nil,
 		})
 		return
@@ -273,7 +273,7 @@ func ReviewStylist(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusNotFound, dtos.Response{
 			StatusCode: http.StatusNotFound,
-			Message:    "Invalid stylist",
+			Message:    "invalid stylist",
 			Data:       nil,
 		})
 		return
@@ -282,7 +282,7 @@ func ReviewStylist(c *gin.Context) {
 	if result.UserId == review.UserId {
 		c.JSON(http.StatusBadRequest, dtos.Response{
 			StatusCode: http.StatusBadRequest,
-			Message:    "You can't create a review for yourself",
+			Message:    "you can't create a review for yourself",
 			Data:       nil,
 		})
 		return
@@ -296,13 +296,13 @@ func ReviewStylist(c *gin.Context) {
 			utils.ErrorLogger(err)
 			c.JSON(http.StatusInternalServerError, dtos.Response{
 				StatusCode: http.StatusInternalServerError,
-				Message:    "Internal server error",
+				Message:    "internal server error",
 				Data:       nil,
 			})
 		}
 		c.JSON(http.StatusCreated, dtos.Response{
 			StatusCode: http.StatusCreated,
-			Message:    "Review created successfully",
+			Message:    "review created successfully",
 			Data:       gin.H{"stylist_id": res.InsertedID},
 		})
 	}
@@ -310,14 +310,14 @@ func ReviewStylist(c *gin.Context) {
 		utils.ErrorLogger(err)
 		c.JSON(http.StatusInternalServerError, dtos.Response{
 			StatusCode: http.StatusInternalServerError,
-			Message:    "Internal server error",
+			Message:    "internal server error",
 			Data:       nil,
 		})
 		return
 	}
 	c.JSON(http.StatusBadRequest, dtos.Response{
 		StatusCode: http.StatusBadRequest,
-		Message:    "User already made a review",
+		Message:    "user already made a review",
 		Data:       nil,
 	})
 }
@@ -352,7 +352,7 @@ func StylistImageUpload(c *gin.Context) {
 	if err == mongo.ErrNoDocuments {
 		c.JSON(http.StatusBadRequest, dtos.Response{
 			StatusCode: http.StatusBadRequest,
-			Message:    "User is not a stylist",
+			Message:    "user is not a stylist",
 			Data:       nil,
 		})
 		return
@@ -362,7 +362,7 @@ func StylistImageUpload(c *gin.Context) {
 	if err == mongo.ErrNoDocuments {
 		c.JSON(http.StatusBadRequest, dtos.Response{
 			StatusCode: http.StatusBadRequest,
-			Message:    "Please update you details before uploading image",
+			Message:    "please update you details before uploading image",
 			Data:       nil,
 		})
 		return
@@ -380,7 +380,7 @@ func StylistImageUpload(c *gin.Context) {
 				http.StatusInternalServerError,
 				dtos.Response{
 					StatusCode: http.StatusInternalServerError,
-					Message:    "Select a file to upload",
+					Message:    "select a file to upload",
 					Data:       nil,
 				})
 			return
@@ -393,7 +393,7 @@ func StylistImageUpload(c *gin.Context) {
 				http.StatusInternalServerError,
 				dtos.Response{
 					StatusCode: http.StatusInternalServerError,
-					Message:    "Error uploading file",
+					Message:    "error uploading file",
 					Data:       nil,
 				})
 			return
@@ -416,14 +416,14 @@ func StylistImageUpload(c *gin.Context) {
 		utils.ErrorLogger(err)
 		c.JSON(http.StatusInternalServerError, dtos.Response{
 			StatusCode: http.StatusInternalServerError,
-			Message:    "Internal server error",
+			Message:    "internal server error",
 			Data:       nil,
 		})
 		return
 	}
 	c.JSON(http.StatusCreated, dtos.Response{
 		StatusCode: http.StatusCreated,
-		Message:    "Stylist images uploaded",
+		Message:    "stylist images uploaded",
 		Data:       gin.H{"images": imageSList},
 	})
 }
